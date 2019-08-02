@@ -4,7 +4,7 @@ LABEL name="djocker/linuxbrew"
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
-	&& apt-get install -y --no-install-recommends ca-certificates file g++ locales make uuid-runtime git curl \
+	&& apt-get install -y --no-install-recommends ca-certificates file g++ systemtap-sdt-dev locales make uuid-runtime git curl \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
