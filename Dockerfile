@@ -1,4 +1,4 @@
-FROM djocker/debian as builder
+FROM djocker/debian
 LABEL maintainer="Sergey Cherepanov <s@cherepanov.co>"
 LABEL name="djocker/linuxbrew"
 ARG DEBIAN_FRONTEND=noninteractive
