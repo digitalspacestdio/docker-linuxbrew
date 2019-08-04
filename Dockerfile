@@ -2,6 +2,7 @@ FROM debian:stretch
 LABEL maintainer="Sergey Cherepanov <s@cherepanov.co>"
 LABEL name="djocker/linuxbrew"
 ARG DEBIAN_FRONTEND=noninteractive
+ARG BREW_VERSION=2.1.9
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends ca-certificates file g++ systemtap-sdt-dev locales make uuid-runtime git curl \
@@ -18,7 +19,7 @@ ENV LANG=en_US.UTF-8 \
 	PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH \
 	SHELL=/bin/bash
 
-RUN git clone --branch 2.1.9 https://github.com/Homebrew/brew /home/linuxbrew/.linuxbrew/Homebrew
+RUN git clone --branch ${BREW_VERSION} https://github.com/Homebrew/brew /home/linuxbrew/.linuxbrew/Homebrew
 RUN mkdir -p /home/linuxbrew/.linuxbrew/etc \
     /home/linuxbrew/.linuxbrew/include \
     /home/linuxbrew/.linuxbrew/lib \
