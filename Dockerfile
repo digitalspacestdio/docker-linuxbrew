@@ -4,7 +4,7 @@ LABEL name="djocker/linuxbrew"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG BREW_VERSION=2.1.9
 RUN apt-get update \
-	&& apt-get install -y --no-install-recommends ca-certificates git curl
+	&& apt-get install -y --no-install-recommends ca-certificates git curl file systemtap-sdt-dev g++ make uuid-runtime
 RUN useradd -m -s /bin/bash linuxbrew
 USER linuxbrew
 WORKDIR /home/linuxbrew
@@ -28,13 +28,3 @@ RUN git clone --branch ${BREW_VERSION} https://github.com/Homebrew/brew /home/li
 
 RUN brew tap djocker/common \
     && brew install openssl curl git
-
-FROM djocker/debian
-RUN useradd -m -s /bin/bash linuxbrew
-USER linuxbrew
-COPY --from=builder /home/linuxbrew /home/linuxbrew
-WORKDIR /home/linuxbrew
-ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH \
-	SHELL=/bin/bash \
-	HOMEBREW_NO_AUTO_UPDATE=1
-CMD ["/bin/bash"]
