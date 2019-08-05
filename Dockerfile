@@ -27,4 +27,6 @@ RUN git clone --branch ${BREW_VERSION} https://github.com/Homebrew/brew /home/li
 	&& brew doctor
 
 RUN brew tap djocker/common \
-    && brew install openssl curl git
+    && brew install openssl curl git \
+    && rm -rf /home/linuxbrew/.cache/Homebrew \
+    && brew cleanup
