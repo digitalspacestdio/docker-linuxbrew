@@ -2,7 +2,7 @@ FROM djocker/debian
 LABEL maintainer="Sergey Cherepanov <s@cherepanov.co>"
 LABEL name="djocker/linuxbrew"
 ARG DEBIAN_FRONTEND=noninteractive
-ARG BREW_VERSION=2.1.9
+ARG BREW_VERSION=2.2.3
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates git curl file systemtap-sdt-dev g++ make uuid-runtime
 RUN useradd -m -s /bin/bash linuxbrew
