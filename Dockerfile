@@ -1,12 +1,13 @@
-FROM djocker/debian as builder
-LABEL maintainer="Sergey Cherepanov <s@cherepanov.co>"
-LABEL name="djocker/linuxbrew"
+FROM digitalspacestudio/debian:buster as builder
+LABEL maintainer="Sergey Cherepanov <sergey@digitalspace.studio>"
+LABEL name="digitalspacestudio/linuxbrew"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG BREW_VERSION=3.1.7
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates git curl file systemtap-sdt-dev g++ make uuid-runtime \
     && apt-get clean \
-    && rm -rf /var/cache/apt
+    && rm -rf /var/cache/apt \
+    && rm -rf /var/lib/apt/lists/*
 RUN useradd -m -s /bin/bash linuxbrew
 USER linuxbrew
 WORKDIR /home/linuxbrew
@@ -30,7 +31,6 @@ RUN git clone --branch ${BREW_VERSION} --depth 1 https://github.com/Homebrew/bre
     && ln -s ../Homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin/
 
 RUN git clone --depth 1 https://github.com/Homebrew/linuxbrew-core /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core
-RUN git clone --depth 1 https://github.com/djocker/homebrew-common /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/djocker/homebrew-common
 
 RUN brew install curl
 RUN brew install git
@@ -41,7 +41,7 @@ RUN brew list | grep 'perl\|python@2\|autoconf\|binutils\|gcc' | xargs --no-run-
     && rm -rf /home/linuxbrew/.cache/Homebrew \
     && rm -rf /home/linuxbrew/.linuxbrew/Homebrew/Library/Homebrew/vendor/portable-ruby
 
-FROM djocker/debian
+FROM digitalspacestudio/debian:buster
 RUN useradd -m -s /bin/bash linuxbrew
 USER linuxbrew
 RUN echo 'export PATH="/home/linuxbrew/.linuxbrew/sbin:$PATH"' >> /home/linuxbrew/.profile
