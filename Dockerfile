@@ -2,7 +2,7 @@ FROM digitalspacestudio/debian:buster as builder
 LABEL maintainer="Sergey Cherepanov <sergey@digitalspace.studio>"
 LABEL name="digitalspacestudio/linuxbrew"
 ARG DEBIAN_FRONTEND=noninteractive
-ARG BREW_VERSION=3.1.7
+ARG BREW_VERSION=3.3.9
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates git curl file systemtap-sdt-dev g++ make uuid-runtime \
     && apt-get clean \
