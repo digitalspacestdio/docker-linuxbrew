@@ -41,12 +41,13 @@ RUN brew install --build-from-source $(echo $(brew deps --include-build gpatch) 
 
 RUN for pkg in $(echo $(brew deps --include-build -n git | xargs echo) git); do bash -x -c "brew install -s $pkg"; done
 
-RUN brew list | grep 'perl\|python@2\|autoconf\|binutils\|gcc' | xargs --no-run-if-empty brew remove \
-    && brew cleanup \
+RUN comm -23 <(brew deps --include-build git) <(brew deps git) | xargs --no-run-if-empty brew remove
+#RUN brew list | grep 'perl\|ruby\|asciidoctor\|automake\|python@2\|autoconf\|binutils\|gcc' | xargs --no-run-if-empty brew remove \
+RUN brew cleanup \
     && rm -rf /home/linuxbrew/.cache/Homebrew \
     && rm -rf /home/linuxbrew/.linuxbrew/Homebrew/Library/Homebrew/vendor/portable-ruby
 
-FROM digitalspacestudio/debian:buster
+FROM digitalspacestudio/ruby:2.6-buster
 RUN useradd -m -s /bin/bash linuxbrew
 USER linuxbrew
 RUN echo 'export PATH="/home/linuxbrew/.linuxbrew/sbin:$PATH"' >> /home/linuxbrew/.profile
@@ -60,3 +61,4 @@ ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH \
     HOMEBREW_FORCE_BREWED_GIT=1
 
 COPY --from=builder --chown=linuxbrew:linuxbrew /home/linuxbrew /home/linuxbrew
+CMD bash
