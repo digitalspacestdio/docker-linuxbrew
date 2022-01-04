@@ -36,7 +36,10 @@ RUN git clone --branch ${BREW_VERSION} --single-branch --depth 1 https://github.
 RUN git clone --single-branch --depth 1 https://github.com/Homebrew/homebrew-core /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core
 
 RUN brew install --build-from-source $(echo $(brew deps --include-build gpatch) gpatch)
-RUN brew install --build-from-source $(echo $(brew deps --include-build git) git)
+#RUN brew install --build-from-source $(echo $(brew deps --include-build git) git)
+#RUN for pkg in $(echo $(brew deps --include-build git) git); do bash -x -c "brew install -s $(brew deps --include-build $pkg) $pkg"; done 
+
+RUN for pkg in $(echo $(brew deps --include-build -n git | xargs echo) git); do bash -x -c "brew install -s $pkg"; done
 
 RUN brew list | grep 'perl\|python@2\|autoconf\|binutils\|gcc' | xargs --no-run-if-empty brew remove \
     && brew cleanup \
