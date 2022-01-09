@@ -1,4 +1,4 @@
-FROM digitalspacestudio/ruby:2.6-buster as builder
+FROM digitalspacestudio/ruby:2.6-slim-bullseye as builder
 LABEL maintainer="Sergey Cherepanov <sergey@digitalspace.studio>"
 LABEL name="digitalspacestudio/linuxbrew"
 ARG DEBIAN_FRONTEND=noninteractive
@@ -35,20 +35,27 @@ RUN git clone --branch ${BREW_VERSION} --single-branch --depth 1 https://github.
 
 RUN git clone --single-branch --depth 1 https://github.com/Homebrew/homebrew-core /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core
 
-RUN brew install --build-from-source $(echo $(brew deps --include-build gpatch) gpatch)
-#RUN brew install --build-from-source $(echo $(brew deps --include-build git) git)
-#RUN for pkg in $(echo $(brew deps --include-build git) git); do bash -x -c "brew install -s $(brew deps --include-build $pkg) $pkg"; done 
+# brew-build-recursive
+COPY --chown=linuxbrew:linuxbrew brew-build-recursive /home/linuxbrew/.linuxbrew/bin/brew-build-recursive
+RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-build-recursive
 
-RUN for pkg in $(echo $(brew deps --include-build -n git | xargs echo) git); do bash -x -c "brew install -s $pkg"; done
+# brew-clean-build-recursive
+COPY --chown=linuxbrew:linuxbrew brew-clean-build-recursive /home/linuxbrew/.linuxbrew/bin/brew-clean-build-recursive
+RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-clean-build-recursive
 
-RUN comm -23 <(brew deps --include-build git) <(brew deps git) | xargs --no-run-if-empty brew remove
-#RUN brew list | grep 'perl\|ruby\|asciidoctor\|automake\|python@2\|autoconf\|binutils\|gcc' | xargs --no-run-if-empty brew remove \
-RUN brew cleanup \
-    && rm -rf /home/linuxbrew/.cache/Homebrew \
-    && rm -rf /home/linuxbrew/.linuxbrew/Homebrew/Library/Homebrew/vendor/portable-ruby
+# brew-list-build-deps
+COPY --chown=linuxbrew:linuxbrew brew-list-build-deps /home/linuxbrew/.linuxbrew/bin/brew-list-build-deps
+RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-list-build-deps
 
-FROM digitalspacestudio/ruby:2.6-buster
+RUN brew-build-recursive gpatch
+RUN brew-build-recursive git
+
+RUN brew-clean-build-recursive git
+RUN brew-clean-build-recursive gpatch
+
+FROM digitalspacestudio/ruby:2.6-slim-bullseye
 RUN useradd -m -s /bin/bash linuxbrew
+
 USER linuxbrew
 RUN echo 'export PATH="/home/linuxbrew/.linuxbrew/sbin:$PATH"' >> /home/linuxbrew/.profile
 WORKDIR /home/linuxbrew

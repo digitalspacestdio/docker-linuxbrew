@@ -1,0 +1,5 @@
+#!/bin/bash
+set -x
+for pkg in $(brew-list-build-deps $1) $1; do
+    brew install -s $pkg
+done

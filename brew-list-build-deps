@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+#set -x
+deps=()
+for arg in "$@"; do
+deps=("$deps $(brew deps --include-build -n $arg)");
+done
+echo $deps | tr ' ' '\n' | awk '!x[$0]++' | xargs echo
