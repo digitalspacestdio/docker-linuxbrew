@@ -1,2 +1,2 @@
 #!/bin/bash
-echo 'comm -23 <(brew deps --include-build $1) <(brew deps $1) | xargs --no-run-if-empty brew remove
+comm -23 <(brew deps --include-build $1) <(brew deps $1) | xargs --no-run-if-empty brew remove

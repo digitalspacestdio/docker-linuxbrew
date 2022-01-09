@@ -4,7 +4,7 @@ LABEL name="digitalspacestudio/linuxbrew"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG BREW_VERSION=3.3.9
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates git curl file systemtap-sdt-dev g++ make uuid-runtime procps gnupg2 \
+    && apt-get install -y --no-install-recommends build-essential procps curl file git  \
     && apt-get clean \
     && rm -rf /var/cache/apt \
     && rm -rf /var/lib/apt/lists/*
@@ -52,6 +52,10 @@ RUN brew-build-recursive git
 
 RUN brew-clean-build-recursive git
 RUN brew-clean-build-recursive gpatch
+
+RUN brew cleanup \
+    && rm -rf /home/linuxbrew/.cache/Homebrew \
+    && rm -rf /home/linuxbrew/.linuxbrew/Homebrew/Library/Homebrew/vendor/portable-ruby
 
 FROM digitalspacestudio/ruby:2.6-slim-bullseye
 RUN useradd -m -s /bin/bash linuxbrew
