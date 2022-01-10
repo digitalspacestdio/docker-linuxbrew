@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+#set -x
 build_deps=()
 for arg in "$@"; do
   build_deps=("$build_deps $(brew deps --include-build -n $arg)");
@@ -12,11 +13,19 @@ done
 
 build_deps="$(echo $build_deps | tr ' ' '\n' | awk '!x[$0]++' | sort)"
 deps="$(echo $deps | tr ' ' '\n' | awk '!x[$0]++' | sort)"
+to_delete=$(comm -23 <(echo "$build_deps") <(echo "$deps"))
 
-if [[ -z $BREW_BUILD_RECURSIVE_DRY_RUN ]]; then
-  comm -23 <(echo "$build_deps") <(echo "$deps") | xargs -I{} --no-run-if-empty brew remove {}
-else
-  comm -23 <(echo "$build_deps") <(echo "$deps") | xargs -I{} --no-run-if-empty echo 'brew remove {}'
+reversed_build_deps=$(echo "$build_deps" | awk '{ for (i=NF; i>1; i--) printf("%s ",$i); print $1; }')
+grep=$(which ggrep 2> /dev/null || which grep 2> /dev/null || echo 'grep')
+
+if [[ ! -z $reversed_build_deps ]]; then
+  for dep in $reversed_build_deps; do
+    if echo $to_delete | $grep -w -q "$dep"; then
+      if [[ -z $BREW_BUILD_RECURSIVE_DRY_RUN ]]; then
+        brew uninstall $dep || return 0
+      else
+        echo "brew uninstall $dep"
+      fi
+    fi
+  done
 fi
-
-
