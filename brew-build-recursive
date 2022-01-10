@@ -1,8 +1,12 @@
 #!/bin/bash
 set -e
-set -x
+#set -x
+build_deps=()
 for arg in "$@"; do
-    for pkg in $(brew-list-build-deps $arg) $arg; do
-        brew install ${BREW_INSTALL_ARGS-"-s"} $pkg
-    done
+  build_deps=("$build_deps $(brew deps --include-build -n $arg)");
+done
+packages=("$build_deps $@");
+packages=$(echo $packages | tr ' ' '\n' | awk '!x[$0]++' | xargs echo)
+for pkg in $packages; do
+  brew install ${BREW_INSTALL_ARGS-"-s"} $pkg
 done
