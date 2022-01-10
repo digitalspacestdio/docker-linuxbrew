@@ -5,8 +5,12 @@ build_deps=()
 for arg in "$@"; do
   build_deps=("$build_deps $(brew deps --include-build -n $arg)");
 done
-packages=("$build_deps $@");
+packages="${build_deps} ${@}"
 packages=$(echo $packages | tr ' ' '\n' | awk '!x[$0]++' | xargs echo)
 for pkg in $packages; do
-  brew install ${BREW_INSTALL_ARGS-"-s"} $pkg
+  if [[ -z $BREW_BUILD_RECURSIVE_DRY_RUN ]]; then
+    brew install ${BREW_BUILD_RECURSIVE_INSTALL_ARGS-"-s"} $pkg
+  else
+    echo "brew install ${BREW_BUILD_RECURSIVE_INSTALL_ARGS-"-s"} $pkg"
+  fi
 done

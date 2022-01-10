@@ -5,4 +5,4 @@ deps=()
 for arg in "$@"; do
 deps=("$deps $(brew deps --include-build -n $arg)");
 done
-echo $deps | tr ' ' '\n' | awk '!x[$0]++' | xargs echo
+echo $deps | tr ' ' '\n' | awk '!x[$0]++' | sort | xargs echo
