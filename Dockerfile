@@ -47,8 +47,7 @@ RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-clean-build-recursive
 COPY --chown=linuxbrew:linuxbrew brew-list-build-deps /home/linuxbrew/.linuxbrew/bin/brew-list-build-deps
 RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-list-build-deps
 
-RUN brew-build-recursive gpatch
-RUN brew-build-recursive git
+RUN brew-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2
 
 RUN brew-clean-build-recursive git
 RUN brew-clean-build-recursive gpatch
@@ -67,6 +66,7 @@ ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH \
     SHELL=/bin/bash \
     LANG=en_US.UTF-8 \
     HOMEBREW_NO_AUTO_UPDATE=1 \
+    HOMEBREW_NO_ENV_HINTS=1 \
     HOMEBREW_NO_INSTALL_CLEANUP=1 \
     HOMEBREW_FORCE_BREWED_CURL=1 \
     HOMEBREW_FORCE_BREWED_GIT=1

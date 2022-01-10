@@ -1,5 +1,8 @@
 #!/bin/bash
+set -e
 set -x
-for pkg in $(brew-list-build-deps $1) $1; do
-    brew install -s $pkg
+for arg in "$@"; do
+    for pkg in $(brew-list-build-deps $arg) $arg; do
+        brew install ${BREW_INSTALL_ARGS-"-s"} $pkg
+    done
 done
