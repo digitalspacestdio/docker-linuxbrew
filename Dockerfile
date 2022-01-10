@@ -47,8 +47,7 @@ RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-clean-build-recursive
 COPY --chown=linuxbrew:linuxbrew brew-list-build-deps /home/linuxbrew/.linuxbrew/bin/brew-list-build-deps
 RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-list-build-deps
 
-RUN brew-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2
-
+RUN brew-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2 jq yq gomplate micro
 RUN brew-clean-build-recursive git jq yq gomplate micro
 
 RUN brew cleanup \
