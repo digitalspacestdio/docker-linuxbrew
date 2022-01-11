@@ -35,6 +35,15 @@ RUN git clone --branch ${BREW_VERSION} --single-branch --depth 1 https://github.
 
 RUN git clone --single-branch --depth 1 https://github.com/Homebrew/homebrew-core /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core
 
+# Fix outdated checksum
+RUN sed -i 's/6c434a3be59f8f62425b2e3c077e785c9ce30ee5874ea1c270e843f273ba71ee/2303a6acfb6cc533e0e86e8a9d29f7e6079e118b9de3f96e07a71a11c082fa6a/g' /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/jpeg.rb
+
+# Fix incorrect condition
+RUN sed -i 's/if Hardware::CPU.arm?/if Hardware::CPU.arm? \&\& OS.mac?/g' /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/nettle.rb
+
+# Remove gcc dependency (the system gcc will be used)
+RUN sed -i 's/depends_on "gcc"/# depends_on "gcc"/g' /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/*.rb
+
 # brew-build-recursive
 COPY --chown=linuxbrew:linuxbrew brew-build-recursive /home/linuxbrew/.linuxbrew/bin/brew-build-recursive
 RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-build-recursive
@@ -50,15 +59,6 @@ RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-list-build-deps
 RUN brew-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2
 RUN brew-build-recursive jq gomplate micro
 RUN brew-clean-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2 git jq gomplate micro
-
-# Fix outdated checksum
-RUN sed -i 's/6c434a3be59f8f62425b2e3c077e785c9ce30ee5874ea1c270e843f273ba71ee/2303a6acfb6cc533e0e86e8a9d29f7e6079e118b9de3f96e07a71a11c082fa6a/g' /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/jpeg.rb
-
-# Fix incorrect condition
-RUN sed -i 's/if Hardware::CPU.arm?/if Hardware::CPU.arm? \&\& OS.mac?/g' /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/nettle.rb
-
-# Remove gcc dependency (the system gcc will be used)
-RUN sed -i 's/depends_on "gcc"/# depends_on "gcc"/g' /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/*.rb
 
 RUN brew cleanup \
     && rm -rf /home/linuxbrew/.cache/Homebrew \
