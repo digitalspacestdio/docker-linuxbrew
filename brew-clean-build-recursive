@@ -22,7 +22,7 @@ if [[ ! -z $reversed_build_deps ]]; then
   for dep in $reversed_build_deps; do
     if echo $to_delete | $grep -w -q "$dep"; then
       if [[ -z $BREW_BUILD_RECURSIVE_DRY_RUN ]]; then
-        brew uninstall $dep || return 0
+        brew uninstall $dep || true
       else
         echo "brew uninstall $dep"
       fi
