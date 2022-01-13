@@ -1,19 +1,12 @@
-FROM digitalspacestudio/ruby:2.6-slim-bullseye as builder
+FROM digitalspacestudio/debian:gcc-11-ruby-2.6-bullseye
 LABEL maintainer="Sergey Cherepanov <sergey@digitalspace.studio>"
 LABEL name="digitalspacestudio/linuxbrew"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG BREW_VERSION=3.3.9
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends build-essential procps curl file git  \
-    && apt-get clean \
-    && rm -rf /var/cache/apt \
-    && rm -rf /var/lib/apt/lists/*
 RUN useradd -m -s /bin/bash linuxbrew
-
 USER linuxbrew
 SHELL ["/bin/bash", "-c"]
 WORKDIR /home/linuxbrew
-
 ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH \
     LANG=en_US.UTF-8 \
     HOMEBREW_NO_AUTO_UPDATE=1 \
@@ -64,12 +57,7 @@ RUN brew cleanup \
     && rm -rf /home/linuxbrew/.cache/Homebrew \
     && rm -rf /home/linuxbrew/.linuxbrew/Homebrew/Library/Homebrew/vendor/portable-ruby
 
-FROM digitalspacestudio/ruby:2.6-slim-bullseye
-RUN useradd -m -s /bin/bash linuxbrew
-
-USER linuxbrew
 RUN echo 'export PATH="/home/linuxbrew/.linuxbrew/sbin:$PATH"' >> /home/linuxbrew/.profile
-WORKDIR /home/linuxbrew
 ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH \
     SHELL=/bin/bash \
     LANG=en_US.UTF-8 \
@@ -80,5 +68,4 @@ ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH \
     HOMEBREW_FORCE_BREWED_CURL=1 \
     HOMEBREW_FORCE_BREWED_GIT=1
 
-COPY --from=builder --chown=linuxbrew:linuxbrew /home/linuxbrew /home/linuxbrew
-CMD bash
+CMD ["bash", "-c"]
