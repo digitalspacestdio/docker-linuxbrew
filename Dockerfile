@@ -74,4 +74,4 @@ ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH \
     HOMEBREW_FORCE_BREWED_CURL=1 \
     HOMEBREW_FORCE_BREWED_GIT=1
 
-CMD ["bash", "-c"]
+CMD ["bash"]
