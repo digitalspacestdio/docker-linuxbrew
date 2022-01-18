@@ -6,26 +6,27 @@ for arg in "$@"; do
   build_deps=("$build_deps $(brew deps --include-build -n $arg)");
 done
 
-deps=()
+deps="$@";
 for arg in "$@"; do
   deps=("$deps $(brew deps -n $arg)");
 done
 
 build_deps="$(echo $build_deps | tr ' ' '\n' | awk '!x[$0]++' | sort)"
 deps="$(echo $deps | tr ' ' '\n' | awk '!x[$0]++' | sort)"
+
 to_delete=$(comm -23 <(echo "$build_deps") <(echo "$deps"))
 
+installed=$(brew list --formula -1 | tr ' ' '\n' | awk '!x[$0]++' | sort)
+to_delete=$(comm -12  <(echo "$installed") <(echo "$to_delete"))
+
+reversed_to_delete_deps=$(echo "$to_delete" | awk '{ for (i=NF; i>1; i--) printf("%s ",$i); print $1; }')
 reversed_build_deps=$(echo "$build_deps" | awk '{ for (i=NF; i>1; i--) printf("%s ",$i); print $1; }')
 grep=$(which ggrep 2> /dev/null || which grep 2> /dev/null || echo 'grep')
 
-if [[ ! -z $reversed_build_deps ]]; then
-  for dep in $reversed_build_deps; do
-    if echo $to_delete | $grep -w -q "$dep"; then
-      if [[ -z $BREW_BUILD_RECURSIVE_DRY_RUN ]]; then
-        brew uninstall $dep || true
-      else
-        echo "brew uninstall $dep"
-      fi
-    fi
-  done
+if [[ ! -z $reversed_to_delete_deps ]]; then
+  if [[ -z $BREW_BUILD_RECURSIVE_DRY_RUN ]]; then
+    brew uninstall $(echo $reversed_to_delete_deps) || true
+  else
+    echo "brew uninstall $(echo $reversed_to_delete_deps)"
+  fi
 fi
