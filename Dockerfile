@@ -63,7 +63,7 @@ RUN brew cleanup \
     && rm -rf /home/linuxbrew/.cache/Homebrew \
     && rm -rf /home/linuxbrew/.linuxbrew/Homebrew/Library/Homebrew/vendor/portable-ruby
 
-FROM digitalspacestudio/debian:gcc-11-ruby-2.6-bullseye as builder
+FROM digitalspacestudio/debian:gcc-11-ruby-2.6-bullseye
 RUN rm -rf /home/linuxbrew/.linuxbrew
 COPY --from=builder --chown=linuxbrew:linuxbrew /home/linuxbrew/.linuxbrew /home/linuxbrew/.linuxbrew
 RUN echo 'export PATH="/home/linuxbrew/.linuxbrew/sbin:$PATH"' >> /home/linuxbrew/.profile
