@@ -7,10 +7,13 @@ for arg in "$@"; do
 done
 packages="${build_deps} ${@}"
 packages=$(echo $packages | tr ' ' '\n' | awk '!x[$0]++' | xargs echo)
+installed=$(brew list --formula -1)
 for pkg in $packages; do
-  if [[ -z $BREW_BUILD_RECURSIVE_DRY_RUN ]]; then
-    brew install ${BREW_BUILD_RECURSIVE_INSTALL_ARGS-"-s"} $pkg
-  else
-    echo "brew install ${BREW_BUILD_RECURSIVE_INSTALL_ARGS-"-s"} $pkg"
+  if ! echo "$installed" | grep $pkg > /dev/null; then
+    if [[ -z $BREW_BUILD_RECURSIVE_DRY_RUN ]]; then
+      brew install ${BREW_BUILD_RECURSIVE_INSTALL_ARGS-"-s"} $pkg
+    else
+      echo "brew install ${BREW_BUILD_RECURSIVE_INSTALL_ARGS-"-s"} $pkg"
+    fi
   fi
 done

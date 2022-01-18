@@ -40,6 +40,9 @@ RUN sed -i 's/if Hardware::CPU.arm?/if Hardware::CPU.arm? \&\& OS.mac?/g' /home/
 # Remove gcc dependency (the system gcc will be used)
 RUN sed -i 's/depends_on "gcc"/# depends_on "gcc"/g' /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/*.rb
 
+# Pcre fix
+RUN sed -i 's/ftp.pcre.org/www.mirrorservice.org\/sites\/ftp.exim.org/g' /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/pcre.rb
+
 # brew-build-recursive
 COPY --chown=linuxbrew:linuxbrew brew-build-recursive /home/linuxbrew/.linuxbrew/bin/brew-build-recursive
 RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-build-recursive
