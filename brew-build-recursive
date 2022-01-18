@@ -8,7 +8,7 @@ done
 packages="${build_deps} ${@}"
 packages=$(echo $packages | tr ' ' '\n' | awk '!x[$0]++' | xargs echo)
 for pkg in $packages; do
-  if ! brew list --formula -1 | grep $pkg > /dev/null; then
+  if ! brew list --formula -1 | grep '^'$pkg'$' > /dev/null; then
     if [[ -z $BREW_BUILD_RECURSIVE_DRY_RUN ]]; then
       brew install ${BREW_BUILD_RECURSIVE_INSTALL_ARGS-"-s"} $pkg
     else

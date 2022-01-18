@@ -21,7 +21,6 @@ to_delete=$(comm -12  <(echo "$installed") <(echo "$to_delete"))
 
 reversed_to_delete_deps=$(echo "$to_delete" | awk '{ for (i=NF; i>1; i--) printf("%s ",$i); print $1; }')
 reversed_build_deps=$(echo "$build_deps" | awk '{ for (i=NF; i>1; i--) printf("%s ",$i); print $1; }')
-grep=$(which ggrep 2> /dev/null || which grep 2> /dev/null || echo 'grep')
 
 if [[ ! -z $reversed_to_delete_deps ]]; then
   if [[ -z $BREW_BUILD_RECURSIVE_DRY_RUN ]]; then
