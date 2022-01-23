@@ -16,7 +16,7 @@ deps="$(echo $deps | tr ' ' '\n' | awk '!x[$0]++' | sort)"
 
 to_delete=$(comm -23 <(echo "$build_deps") <(echo "$deps"))
 
-installed=$(brew list --formula -1 | tr ' ' '\n' | awk '!x[$0]++' | sort)
+installed=$(brew list --full-name --formula -1 | tr ' ' '\n' | awk '!x[$0]++' | sort)
 to_delete=$(comm -12  <(echo "$installed") <(echo "$to_delete"))
 
 reversed_to_delete_deps=$(echo "$to_delete" | awk '{ for (i=NF; i>1; i--) printf("%s ",$i); print $1; }')
