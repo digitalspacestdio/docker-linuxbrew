@@ -1,6 +1,6 @@
 require 'formula'
 
-class DockerComposeOroplatform < Formula
+class DockerLinuxbrew < Formula
   url "https://github.com/digitalspacestdio/homebrew-docker-linuxbrew.git", :using => :git
   version "0.1.0"
   revision 1
