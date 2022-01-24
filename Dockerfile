@@ -60,7 +60,8 @@ RUN brew-build-recursive jq neovim
 RUN ln -s $(brew --prefix neovim)/bin/nvim $(brew --prefix)/bin/vim
 RUN brew-clean-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2 git jq neovim
 
-RUN brew cleanup \
+RUN brew autoremove \
+    && brew cleanup \
     && rm -rf /home/linuxbrew/.cache/Homebrew \
     && rm -rf /home/linuxbrew/.linuxbrew/Homebrew/Library/Homebrew/vendor/portable-ruby
 
