@@ -6,11 +6,15 @@ class DockerLinuxbrew < Formula
   revision 1
 
   def install
-    libexec.install Dir["*"]
-    bin.write_exec_script libexec/"brew-build-recursive"
-    bin.write_exec_script libexec/"brew-clean-build-recursive"
-    bin.write_exec_script libexec/"brew-list-build-deps"
-    bin.write_exec_script libexec/"brew-list-build-only-deps"
+    bin.install "brew-build-recursive"
+    bin.install "brew-clean-build-recursive"
+    bin.install "brew-list-build-deps"
+    bin.install "brew-list-build-only-deps"
+#     libexec.install Dir["*"]
+#     bin.write_exec_script libexec/"brew-build-recursive"
+#     bin.write_exec_script libexec/"brew-clean-build-recursive"
+#     bin.write_exec_script libexec/"brew-list-build-deps"
+#     bin.write_exec_script libexec/"brew-list-build-only-deps"
   end
 
   def caveats
