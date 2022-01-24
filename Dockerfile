@@ -56,8 +56,9 @@ COPY --chown=linuxbrew:linuxbrew brew-list-build-deps /home/linuxbrew/.linuxbrew
 RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-list-build-deps
 
 RUN brew-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2
-RUN brew-build-recursive jq gomplate micro
-RUN brew-clean-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2 git jq gomplate micro
+RUN brew-build-recursive jq neovim
+RUN ln -s $(brew --prefix neovim)/bin/nvim $(brew --prefix)/bin/vim
+RUN brew-clean-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2 git jq neovim
 
 RUN brew cleanup \
     && rm -rf /home/linuxbrew/.cache/Homebrew \
