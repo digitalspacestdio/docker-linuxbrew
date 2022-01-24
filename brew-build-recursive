@@ -16,3 +16,7 @@ for pkg in $packages; do
     fi
   fi
 done
+
+if [[ -z $BREW_BUILD_RECURSIVE_NO_CLEANUP ]]; then
+  brew-clean-build-recursive "${@}"
+fi

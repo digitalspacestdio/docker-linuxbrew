@@ -43,22 +43,9 @@ RUN sed -i 's/depends_on "gcc"/# depends_on "gcc"/g' /home/linuxbrew/.linuxbrew/
 # Pcre fix
 RUN sed -i 's/ftp.pcre.org/www.mirrorservice.org\/sites\/ftp.exim.org/g' /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/pcre.rb
 
-# brew-build-recursive
-COPY --chown=linuxbrew:linuxbrew brew-build-recursive /home/linuxbrew/.linuxbrew/bin/brew-build-recursive
-RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-build-recursive
-
-# brew-clean-build-recursive
-COPY --chown=linuxbrew:linuxbrew brew-clean-build-recursive /home/linuxbrew/.linuxbrew/bin/brew-clean-build-recursive
-RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-clean-build-recursive
-
-# brew-list-build-deps
-COPY --chown=linuxbrew:linuxbrew brew-list-build-deps /home/linuxbrew/.linuxbrew/bin/brew-list-build-deps
-RUN chmod +x /home/linuxbrew/.linuxbrew/bin/brew-list-build-deps
-
-RUN brew-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2
-RUN brew-build-recursive jq neovim
+RUN brew tap digitalspacestdio/brewtools
+RUN brew-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2 jq neovim
 RUN ln -s $(brew --prefix neovim)/bin/nvim $(brew --prefix)/bin/vim
-RUN brew-clean-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2 git jq neovim
 
 RUN brew autoremove \
     && brew cleanup \

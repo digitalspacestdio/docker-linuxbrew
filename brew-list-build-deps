@@ -1,8 +1,11 @@
 #!/bin/bash
 set -e
 #set -x
-deps=()
+build_deps=()
 for arg in "$@"; do
-deps=("$deps $(brew deps --include-build -n $arg)");
+  build_deps=("$build_deps $(brew deps --include-build -n $arg)");
 done
-echo $deps | tr ' ' '\n' | awk '!x[$0]++' | sort | xargs echo
+
+build_deps="$(echo $build_deps | tr ' ' '\n' | awk '!x[$0]++' | sort)"
+
+echo "$build_deps"

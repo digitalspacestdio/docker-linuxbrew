@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+#set -x
+build_deps=()
+for arg in "$@"; do
+  build_deps=("$build_deps $(brew deps --include-build -n $arg)");
+done
+
+deps="$@";
+for arg in "$@"; do
+  deps=("$deps $(brew deps -n $arg)");
+done
+
+build_deps="$(echo $build_deps | tr ' ' '\n' | awk '!x[$0]++' | sort)"
+deps="$(echo $deps | tr ' ' '\n' | awk '!x[$0]++' | sort)"
+
+build_only_deps=$(comm -23 <(echo "$build_deps") <(echo "$deps"))
+
+echo "$build_only_deps"
