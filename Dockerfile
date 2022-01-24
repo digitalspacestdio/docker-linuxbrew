@@ -43,7 +43,7 @@ RUN sed -i 's/depends_on "gcc"/# depends_on "gcc"/g' /home/linuxbrew/.linuxbrew/
 # Pcre fix
 RUN sed -i 's/ftp.pcre.org/www.mirrorservice.org\/sites\/ftp.exim.org/g' /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/pcre.rb
 
-RUN brew tap digitalspacestdio/docker-linuxbrew
+RUN brew install digitalspacestdio/docker-linuxbrew/docker-linuxbrew
 RUN brew-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2 jq neovim
 RUN ln -s $(brew --prefix neovim)/bin/nvim $(brew --prefix)/bin/vim
 
