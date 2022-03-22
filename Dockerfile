@@ -44,7 +44,12 @@ RUN sed -i 's/depends_on "gcc"/# depends_on "gcc"/g' /home/linuxbrew/.linuxbrew/
 RUN sed -i 's/ftp.pcre.org/www.mirrorservice.org\/sites\/ftp.exim.org/g' /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/pcre.rb
 
 RUN brew install digitalspacestdio/docker-linuxbrew/docker-linuxbrew
-RUN brew-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2 jq micro
+RUN BREW_BUILD_RECURSIVE_NO_CLEANUP=1 brew-build-recursive util-linux coreutils
+RUN BREW_BUILD_RECURSIVE_NO_CLEANUP=1 brew-build-recursive gnu-sed gpatch git
+RUN BREW_BUILD_RECURSIVE_NO_CLEANUP=1 brew-build-recursive unzip bzip2
+RUN BREW_BUILD_RECURSIVE_NO_CLEANUP=1 brew-build-recursive jq micro
+
+RUN brew-clean-build-recursive util-linux coreutils gnu-sed gpatch git unzip bzip2 jq micro
 
 RUN brew autoremove \
     && brew cleanup \
